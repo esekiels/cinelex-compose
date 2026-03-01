@@ -1,22 +1,15 @@
 import co.esekiels.cinelex.Configuration
 
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
+    id("esekiels.cinelex.android.application")
+    id("esekiels.cinelex.android.application.compose")
 }
 
 android {
     namespace = "co.esekiels.cinelex"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
 
     defaultConfig {
         applicationId = "co.esekiels.cinelex"
-        minSdk = 24
-        targetSdk = 36
         versionCode = Configuration.versionCode
         versionName = Configuration.versionName
 
@@ -31,19 +24,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    buildFeatures {
-        compose = true
-    }
-
-    lint {
-        warningsAsErrors = true
-        abortOnError = true
-        disable.add("GradleDependency")
     }
 }
 
