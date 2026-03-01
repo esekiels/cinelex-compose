@@ -1,4 +1,6 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -24,3 +26,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "Cinelex"
 include(":app")
+include(":core:common")
+include(":core:model")
+include(":core:navigation")
+include(":core:design")
+include(":core:database")
+include(":core:network")
+include(":core:data")
