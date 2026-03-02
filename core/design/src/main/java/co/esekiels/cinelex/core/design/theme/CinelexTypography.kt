@@ -1,3 +1,10 @@
+/*
+ * Cinelex
+ * CinelexTypography
+ *
+ * Created by Esekiel Surbakti on 01/03/26
+ */
+
 package co.esekiels.cinelex.core.design.theme
 
 import androidx.compose.runtime.staticCompositionLocalOf
