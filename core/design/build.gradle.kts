@@ -20,4 +20,7 @@ dependencies {
     api(libs.androidx.compose.material.icons.extended)
     api(libs.androidx.compose.ui.tooling)
     api(libs.androidx.compose.ui.tooling.preview)
+
+    api(libs.coil.compose)
+    api(libs.coil.network.okhttp)
 }

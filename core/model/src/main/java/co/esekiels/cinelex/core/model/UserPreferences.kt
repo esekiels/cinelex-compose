@@ -12,9 +12,9 @@ data class UserPreferences(
     val uiTheme: UiTheme = UiTheme.FOLLOW_SYSTEM,
 )
 
-enum class Language(val code: String) {
-    ENGLISH("en"),
-    INDONESIAN("in"),
+enum class Language(val code: String, val tmdbCode: String) {
+    ENGLISH("en", "en"),
+    INDONESIAN("in", "id"),
     ;
 
     companion object {
