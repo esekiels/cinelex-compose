@@ -2,6 +2,7 @@ package co.esekiels.cinelex
 
 import android.content.res.Configuration as AndroidConfig
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -40,7 +41,9 @@ class MainActivity : ComponentActivity() {
             val configuration = AndroidConfig(LocalConfiguration.current).apply {
                 setLocale(locale)
             }
-            val localizedContext = createConfigurationContext(configuration)
+            val localizedContext = ContextThemeWrapper(this@MainActivity, theme).apply {
+                applyOverrideConfiguration(configuration)
+            }
 
             CompositionLocalProvider(LocalContext provides localizedContext) {
                 CinelexMain(

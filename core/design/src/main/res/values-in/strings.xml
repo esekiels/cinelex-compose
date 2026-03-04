@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
    <string name="app_name">Cinelex</string>
-   <string name="hello">Hi</string>
 
    <!-- Actions -->
    <string name="action_language">Ganti bahasa</string>
@@ -11,6 +10,12 @@
    <string name="picker_language_title">Pilih Bahasa</string>
    <string name="language_english">Inggris</string>
    <string name="language_indonesian">Indonesia</string>
+
+   <!-- Home -->
+   <string name="now_playing">Sedang Tayang</string>
+   <string name="upcoming">Akan Datang</string>
+   <string name="top_rated">Rating Tertinggi</string>
+   <string name="popular">Populer</string>
 
    <!-- Theme picker -->
    <string name="picker_theme_title">Pilih Tema</string>
