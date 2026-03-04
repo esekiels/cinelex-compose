@@ -5,7 +5,6 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
-import org.jetbrains.kotlin.gradle.model.KotlinAndroidExtension
 
 internal fun Project.configureKotlinAndroid(
 	commonExtension: CommonExtension,
@@ -32,9 +31,8 @@ internal fun Project.configureKotlinAndroid(
 		compilerOptions {
 			freeCompilerArgs.set(
 				freeCompilerArgs.getOrElse(emptyList()) + listOf(
-					// Enable experimental coroutines APIs, including Flow
+					"-Xopt-in=kotlin.RequiresOptIn",
 					"-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-					// Enable experimental compose APIs
 					"-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api"
 				)
 			)

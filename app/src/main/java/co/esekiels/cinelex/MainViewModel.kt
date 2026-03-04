@@ -27,7 +27,7 @@ class MainViewModel @Inject constructor(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
+            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
             initialValue = MainUiState(),
         )
 
@@ -43,6 +43,8 @@ class MainViewModel @Inject constructor(
         }
     }
 }
+
+private const val STOP_TIMEOUT_MILLIS = 5_000L
 
 data class MainUiState(
     val language: String = Language.ENGLISH.code,
