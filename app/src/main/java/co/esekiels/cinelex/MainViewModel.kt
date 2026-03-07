@@ -2,7 +2,7 @@ package co.esekiels.cinelex
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.esekiels.cinelex.core.datastore.UserPreferencesDataSource
+import co.esekiels.cinelex.core.data.user.UserDataRepository
 import co.esekiels.cinelex.core.model.Language
 import co.esekiels.cinelex.core.model.UiTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,10 +15,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val userPreferencesDataSource: UserPreferencesDataSource,
+    private val userDataRepository: UserDataRepository,
 ) : ViewModel() {
 
-    val uiState: StateFlow<MainUiState> = userPreferencesDataSource.userPreferences
+    val uiState: StateFlow<MainUiState> = userDataRepository.userPreferences
         .map { prefs ->
             MainUiState(
                 language = prefs.language,
@@ -33,13 +33,13 @@ class MainViewModel @Inject constructor(
 
     fun setUiTheme(uiTheme: UiTheme) {
         viewModelScope.launch {
-            userPreferencesDataSource.setUiTheme(uiTheme)
+            userDataRepository.setUiTheme(uiTheme)
         }
     }
 
     fun setLanguage(language: Language) {
         viewModelScope.launch {
-            userPreferencesDataSource.setLanguage(language.code)
+            userDataRepository.setLanguage(language)
         }
     }
 }

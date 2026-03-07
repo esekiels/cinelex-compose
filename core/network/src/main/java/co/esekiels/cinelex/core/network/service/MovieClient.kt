@@ -13,10 +13,10 @@ import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 class MovieClient @Inject constructor(
-	private val service: MovieService,
-	private val json: Json
+    private val service: MovieService,
+    private val json: Json
 ) {
-	
-	suspend fun fetchMovies(category: String, language: String = "en"): ApiResponse<MovieResponse> =
-		ApiResponse.safeApiCall(json) { service.fetchMovies(category, language) }
+    
+    suspend fun fetchMovies(category: String, language: String = "en"): ApiResponse<MovieResponse> =
+        ApiResponse.safeApiCall(json) { service.fetchMovies(category, language) }
 }

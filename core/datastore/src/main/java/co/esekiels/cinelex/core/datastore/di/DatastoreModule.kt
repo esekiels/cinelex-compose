@@ -9,9 +9,10 @@ package co.esekiels.cinelex.core.datastore.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.dataStoreFile
+import co.esekiels.cinelex.core.datastore.UserPreferencesProto
+import co.esekiels.cinelex.core.datastore.UserPreferencesSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,10 +26,13 @@ object DatastoreModule {
 
     @Provides
     @Singleton
-    fun provideDataStore(
+    fun provideUserPreferencesDataStore(
         @ApplicationContext context: Context,
-    ): DataStore<Preferences> =
-        PreferenceDataStoreFactory.create {
-            context.preferencesDataStoreFile("user_preferences")
+        serializer: UserPreferencesSerializer,
+    ): DataStore<UserPreferencesProto> =
+        DataStoreFactory.create(
+            serializer = serializer,
+        ) {
+            context.dataStoreFile("user_preferences.pb")
         }
 }

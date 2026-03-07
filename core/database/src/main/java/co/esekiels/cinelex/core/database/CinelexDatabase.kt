@@ -13,10 +13,10 @@ import co.esekiels.cinelex.core.database.dao.MovieDao
 import co.esekiels.cinelex.core.database.entity.MovieEntity
 
 @Database(
-	entities = [MovieEntity::class],
-	version = 1,
-	exportSchema = false
+    entities = [MovieEntity::class],
+    version = 1,
+    exportSchema = false
 )
 abstract class CinelexDatabase: RoomDatabase() {
-	abstract fun movieDao(): MovieDao
+    abstract fun movieDao(): MovieDao
 }

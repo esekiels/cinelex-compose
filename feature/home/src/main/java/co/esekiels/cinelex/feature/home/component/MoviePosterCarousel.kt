@@ -26,47 +26,73 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import co.esekiels.cinelex.core.design.theme.CinelexTheme
 import co.esekiels.cinelex.core.model.Movie
+import co.esekiels.cinelex.core.testing.MovieStubs
 import coil3.compose.AsyncImage
 
 @Composable
 fun MoviePosterCarousel(
-	title: String,
-	movies: List<Movie>,
-	onMovieClick: (Movie) -> Unit,
+    title: String,
+    movies: List<Movie>,
+    onMovieClick: (Movie) -> Unit,
 ) {
-	val screenWidth = with(LocalDensity.current) {
-		LocalWindowInfo.current.containerSize.width.toDp()
-	}
-	val cardWidth = screenWidth * 0.4f
+    val screenWidth = with(LocalDensity.current) {
+        LocalWindowInfo.current.containerSize.width.toDp()
+    }
+    val cardWidth = screenWidth * 0.4f
 
-	Column(
-		modifier = Modifier.fillMaxWidth(),
-		verticalArrangement = Arrangement.spacedBy(8.dp),
-	) {
-		Text(
-			text = title,
-			style = CinelexTheme.typography.headingSmall,
-			color = CinelexTheme.colors.textPrimary,
-			modifier = Modifier.padding(horizontal = 16.dp),
-		)
-		LazyRow(
-			contentPadding = PaddingValues(horizontal = 16.dp),
-			horizontalArrangement = Arrangement.spacedBy(16.dp),
-		) {
-			items(movies, key = { it.id }) { movie ->
-				AsyncImage(
-					model = movie.posterUrl,
-					contentDescription = movie.title,
-					contentScale = ContentScale.Crop,
-					modifier = Modifier
-						.width(cardWidth)
-						.aspectRatio(2f / 3f)
-						.clip(RoundedCornerShape(8.dp))
-						.clickable { onMovieClick(movie) },
-				)
-			}
-		}
-	}
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(
+            text = title,
+            style = CinelexTheme.typography.headingSmall,
+            color = CinelexTheme.colors.textPrimary,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            items(movies, key = { it.id }) { movie ->
+                AsyncImage(
+                    model = movie.posterUrl,
+                    contentDescription = movie.title,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(cardWidth)
+                        .aspectRatio(2f / 3f)
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { onMovieClick(movie) },
+                )
+            }
+        }
+    }
+}
+
+@Preview("Light")
+@Composable
+private fun MoviePosterCarouselLightPreview() {
+    CinelexTheme(darkTheme = false) {
+        MoviePosterCarousel(
+            title = "Now Playing",
+            movies = MovieStubs,
+            onMovieClick = {},
+        )
+    }
+}
+
+@Preview("Dark")
+@Composable
+private fun MoviePosterCarouselDarkPreview() {
+    CinelexTheme(darkTheme = true) {
+        MoviePosterCarousel(
+            title = "Now Playing",
+            movies = MovieStubs,
+            onMovieClick = {},
+        )
+    }
 }

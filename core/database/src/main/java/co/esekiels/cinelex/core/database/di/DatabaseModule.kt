@@ -21,16 +21,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object DatabaseModule {
-	
-	@Provides
-	@Singleton
-	fun provideCinelexDatabase(@ApplicationContext context: Context): CinelexDatabase =
-		Room.databaseBuilder(
-			context,
-			CinelexDatabase::class.java,
-			"cinelex-database"
-		).build()
-	
-	@Provides
-	fun provideMovieDao(database: CinelexDatabase): MovieDao = database.movieDao()
+    
+    @Provides
+    @Singleton
+    fun provideCinelexDatabase(@ApplicationContext context: Context): CinelexDatabase =
+        Room.databaseBuilder(
+            context,
+            CinelexDatabase::class.java,
+            "cinelex-database"
+        ).build()
+    
+    @Provides
+    fun provideMovieDao(database: CinelexDatabase): MovieDao = database.movieDao()
 }

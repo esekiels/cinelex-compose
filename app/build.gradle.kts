@@ -32,7 +32,7 @@ dependencies {
 
     // cores
     implementation(projects.core.design)
-    implementation(projects.core.datastore)
+    implementation(projects.core.data)
     implementation(projects.core.model)
 
 	// features

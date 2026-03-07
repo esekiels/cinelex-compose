@@ -14,10 +14,10 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
             }
-	        
-	        extensions.getByType<KotlinAndroidProjectExtension>().apply {
-				configureKotlinAndroid(this)
-	        }
+            
+            extensions.getByType<KotlinAndroidProjectExtension>().apply {
+                configureKotlinAndroid(this)
+            }
         }
     }
 }

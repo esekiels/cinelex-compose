@@ -6,3 +6,10 @@ plugins {
 android {
 	namespace = "co.esekiels.cinelex.feature.home"
 }
+
+dependencies {
+	testImplementation(projects.core.testing)
+	testImplementation(libs.junit)
+	testImplementation(libs.kotlinx.coroutines.test)
+	testImplementation(libs.mockito.kotlin)
+}
