@@ -1,53 +1,59 @@
 package co.esekiels.cinelex
 
+import android.content.res.Configuration as AndroidConfig
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import co.esekiels.cinelex.core.design.R
-import co.esekiels.cinelex.core.design.theme.CinelexTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.esekiels.cinelex.core.model.UiTheme
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
-            CinelexTheme {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Greeting(name = "Android")
-                }
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            val darkTheme = when (uiState.uiTheme) {
+                UiTheme.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+                UiTheme.DARK -> true
+                UiTheme.LIGHT -> false
+            }
+
+            val locale = Locale.forLanguageTag(uiState.language)
+            val configuration = AndroidConfig(LocalConfiguration.current).apply {
+                setLocale(locale)
+            }
+            val localizedContext = ContextThemeWrapper(this@MainActivity, theme).apply {
+                applyOverrideConfiguration(configuration)
+            }
+
+            CompositionLocalProvider(LocalContext provides localizedContext) {
+                CinelexMain(
+                    darkTheme = darkTheme,
+                    currentLanguage = uiState.language,
+                    currentUiTheme = uiState.uiTheme,
+                    onLanguageSelected = viewModel::setLanguage,
+                    onThemeSelected = viewModel::setUiTheme,
+                )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = stringResource(R.string.hello),
-        modifier = modifier,
-        color = CinelexTheme.colors.textPrimary,
-        style = CinelexTheme.typography.headingMedium,
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CinelexTheme {
-        Greeting("Android")
     }
 }

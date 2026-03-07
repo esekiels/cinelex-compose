@@ -173,9 +173,11 @@ complexity:
     active: true
     functionThreshold: 6
     constructorThreshold: 7
-    ignoreDefaultParameters: false
+    ignoreDefaultParameters: true
     ignoreDataClasses: true
     ignoreAnnotatedParameter: []
+    ignoreAnnotated:
+      - "Composable"
   MethodOverloading:
     active: false
     threshold: 6
@@ -363,7 +365,7 @@ exceptions:
   ThrowingNewInstanceOfSameException:
     active: true
   TooGenericExceptionCaught:
-    active: true
+    active: false
     excludes:
       [
         "**/test/**",
@@ -465,7 +467,7 @@ naming:
     packagePattern: '[a-z]+(\.[a-z][A-Za-z0-9]*)*'
   TopLevelPropertyNaming:
     active: true
-    constantPattern: "[A-Z][_A-Z0-9]*"
+    constantPattern: "[A-Z][_A-Za-z0-9]*"
     propertyPattern: "[A-Za-z][_A-Za-z0-9]*"
     privatePropertyPattern: "_?[A-Za-z][_A-Za-z0-9]*"
   VariableMaxLength:
@@ -766,12 +768,23 @@ style:
       - "0"
       - "1"
       - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "401"
+      - "403"
+      - "408"
+      - "500"
+      - "504"
+      - "599"
     ignoreHashCodeFunction: true
-    ignorePropertyDeclaration: false
+    ignorePropertyDeclaration: true
     ignoreLocalVariableDeclaration: false
     ignoreConstantDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
     ignoreAnnotation: false
+    ignoreAnnotated:
+      - "Composable"
     ignoreNamedArgument: true
     ignoreEnums: false
     ignoreRanges: false
@@ -890,6 +903,8 @@ style:
   UnusedPrivateMember:
     active: true
     allowedNames: ""
+    ignoreAnnotated:
+      - "Preview"
   UnusedPrivateProperty:
     active: true
     allowedNames: "_|ignored|expected|serialVersionUID"

@@ -34,5 +34,14 @@ gradlePlugin {
             id = "esekiels.cinelex.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
+	    
+	    register("androidFeature") {
+			id = "esekiels.cinelex.android.feature"
+		    implementationClass = "AndroidFeatureConventionPlugin"
+	    }
+	    register("androidHilt") {
+			id = "esekiels.cinelex.android.hilt"
+		    implementationClass = "AndroidHiltConventionPlugin"
+	    }
     }
 }

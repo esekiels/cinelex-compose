@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Cinelex</string>
-    <string name="hello">Hello</string>
+    <string name="app_name">Cinelex</string>
+
+    <!-- Actions -->
+    <string name="action_language">Change language</string>
+    <string name="action_theme">Toggle theme</string>
+
+    <!-- Language picker -->
+    <string name="picker_language_title">Select Language</string>
+    <string name="language_english">English</string>
+    <string name="language_indonesian">Indonesian</string>
+
+    <!-- Home -->
+    <string name="now_playing">Now Playing</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="popular">Popular</string>
+
+    <!-- Theme picker -->
+    <string name="picker_theme_title">Select Theme</string>
+    <string name="theme_follow_system">Follow System</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
 </resources>
