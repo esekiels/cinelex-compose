@@ -17,26 +17,27 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 class AndroidFeatureConventionPlugin : Plugin<Project> {
 
-	override fun apply(target: Project) {
-		with(target) {
-			pluginManager.apply {
-				apply("com.android.library")
-			}
+    override fun apply(target: Project) {
+        with(target) {
+            pluginManager.apply {
+                apply("com.android.library")
+            }
 
-			dependencies {
-				add("implementation", project(":core:design"))
-				add("implementation", project(":core:data"))
-			}
+            dependencies {
+                add("implementation", project(":core:design"))
+                add("implementation", project(":core:data"))
+                add("debugImplementation", project(":core:testing"))
+            }
 
-			extensions.configure<LibraryExtension>() {
-				configureKotlinAndroid(this)
-				configureAndroidCompose(this)
-			}
-			
-			extensions.getByType<KotlinAndroidProjectExtension>().apply {
-				configureKotlinAndroid(this)
-			}
-			
-		}
-	}
+            extensions.configure<LibraryExtension>() {
+                configureKotlinAndroid(this)
+                configureAndroidCompose(this)
+            }
+            
+            extensions.getByType<KotlinAndroidProjectExtension>().apply {
+                configureKotlinAndroid(this)
+            }
+            
+        }
+    }
 }

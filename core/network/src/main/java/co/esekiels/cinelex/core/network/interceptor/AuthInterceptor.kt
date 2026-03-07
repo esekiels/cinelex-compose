@@ -13,11 +13,11 @@ import okhttp3.Response
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(): Interceptor {
-	override fun intercept(chain: Interceptor.Chain): Response {
-		val request = chain.request().newBuilder()
-			.addHeader("Authorization", "Bearer ${BuildConfig.TOKEN}")
-			.addHeader("Accept", "application/json")
-			.build()
-		return chain.proceed(request)
-	}
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request().newBuilder()
+            .addHeader("Authorization", "Bearer ${BuildConfig.TOKEN}")
+            .addHeader("Accept", "application/json")
+            .build()
+        return chain.proceed(request)
+    }
 }

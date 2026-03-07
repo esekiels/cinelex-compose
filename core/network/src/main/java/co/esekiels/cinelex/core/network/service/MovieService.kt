@@ -14,11 +14,11 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieService {
-	
-	@GET("{category}")
-	suspend fun fetchMovies(
-		@Path("category") category: String,
-		@Query("language") language: String = "en",
-		@Query("page") page: Int = 1
-	): Response<MovieResponse>
+    
+    @GET("{category}")
+    suspend fun fetchMovies(
+        @Path("category") category: String,
+        @Query("language") language: String = "en",
+        @Query("page") page: Int = 1
+    ): Response<MovieResponse>
 }

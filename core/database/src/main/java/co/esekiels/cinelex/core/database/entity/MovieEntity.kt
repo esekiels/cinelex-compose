@@ -13,11 +13,11 @@ import androidx.room.PrimaryKey
 
 @Entity(primaryKeys = ["id", "category"])
 data class MovieEntity(
-	val id: Int,
-	val title: String,
-	@ColumnInfo(name = "backdrop_path")
-	val backdropPath: String,
-	@ColumnInfo(name = "poster_path")
-	val posterPath: String,
-	val category: String
+    val id: Int,
+    val title: String,
+    @ColumnInfo(name = "backdrop_path")
+    val backdropPath: String,
+    @ColumnInfo(name = "poster_path")
+    val posterPath: String,
+    val category: String
 )

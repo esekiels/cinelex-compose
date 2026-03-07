@@ -26,50 +26,50 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
-	
-	@Provides
-	@Singleton
-	fun provideJson(): Json = Json {
-		ignoreUnknownKeys = true
-		coerceInputValues = true
-	}
-	
-	@Provides
-	@Singleton
-	fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
-		return OkHttpClient.Builder()
-			.apply {
-				addNetworkInterceptor(authInterceptor)
-				if (BuildConfig.DEBUG) {
-					this.addNetworkInterceptor(
-						HttpLoggingInterceptor().apply {
-							level = HttpLoggingInterceptor.Level.BODY
-						}
-					)
-				}
-			}
-			.build()
-	}
-	
-	@Provides
-	@Singleton
-	fun provideRetrofit(json: Json, okHttpClient: OkHttpClient): Retrofit {
-		return Retrofit.Builder()
-			.client(okHttpClient)
-			.baseUrl(BuildConfig.BASE_URL)
-			.addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-			.build()
-	}
-	
-	@Provides
-	@Singleton
-	fun provideMovieService(retrofit: Retrofit): MovieService {
-		return retrofit.create(MovieService::class.java)
-	}
-	
-	@Provides
-	@Singleton
-	fun provideMovieClient(movieService: MovieService, json: Json): MovieClient {
-		return MovieClient(movieService, json)
-	}
+    
+    @Provides
+    @Singleton
+    fun provideJson(): Json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+    }
+    
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .apply {
+                addNetworkInterceptor(authInterceptor)
+                if (BuildConfig.DEBUG) {
+                    this.addNetworkInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
+                        }
+                    )
+                }
+            }
+            .build()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideRetrofit(json: Json, okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideMovieService(retrofit: Retrofit): MovieService {
+        return retrofit.create(MovieService::class.java)
+    }
+    
+    @Provides
+    @Singleton
+    fun provideMovieClient(movieService: MovieService, json: Json): MovieClient {
+        return MovieClient(movieService, json)
+    }
 }
