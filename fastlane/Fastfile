@@ -1,0 +1,10 @@
+default_platform(:android)
+
+platform :android do
+
+  desc "Run detekt and all unit tests"
+  lane :check do
+    gradle(task: "detekt test")
+  end
+
+end
