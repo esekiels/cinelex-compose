@@ -8,6 +8,6 @@
 package co.esekiels.cinelex.core.common
 
 data class CinelexException(
-	val code: String,
-	override val message: String
+    val code: String,
+    override val message: String
 ) : Exception()

@@ -11,20 +11,20 @@ import org.gradle.kotlin.dsl.getByType
  */
 
 class AndroidHiltConventionPlugin : Plugin<Project> {
-	override fun apply(target: Project) {
-		with(target) {
-			pluginManager.apply {
-				apply("dagger.hilt.android.plugin")
-				apply("com.google.devtools.ksp")
-			}
-			
-			val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-			
-			dependencies {
-				add("implementation", libs.findLibrary("hilt.android").get())
-				add("implementation", libs.findLibrary("androidx.hilt.navigation.compose").get())
-				add("ksp", libs.findLibrary("hilt.compiler").get())
-			}
-		}
-	}
+    override fun apply(target: Project) {
+        with(target) {
+            pluginManager.apply {
+                apply("dagger.hilt.android.plugin")
+                apply("com.google.devtools.ksp")
+            }
+            
+            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+            
+            dependencies {
+                add("implementation", libs.findLibrary("hilt.android").get())
+                add("implementation", libs.findLibrary("androidx.hilt.navigation.compose").get())
+                add("ksp", libs.findLibrary("hilt.compiler").get())
+            }
+        }
+    }
 }

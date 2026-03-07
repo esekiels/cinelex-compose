@@ -15,5 +15,5 @@ import kotlin.annotation.AnnotationRetention.RUNTIME
 annotation class Dispatcher(val dispatcher: CinelexDispatchers)
 
 enum class CinelexDispatchers {
-	IO
+    IO
 }
