@@ -3,13 +3,15 @@ package co.esekiels.cinelex
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -29,6 +31,8 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import co.esekiels.cinelex.core.design.R
+import co.esekiels.cinelex.core.design.component.BottomBarItem
+import co.esekiels.cinelex.core.design.component.CinelexBottomBar
 import co.esekiels.cinelex.core.design.theme.CinelexTheme
 import co.esekiels.cinelex.core.model.Language
 import co.esekiels.cinelex.core.model.UiTheme
@@ -37,6 +41,7 @@ import co.esekiels.cinelex.core.navigation.CinelexRoute
 import co.esekiels.cinelex.core.navigation.LocalComposeNavigator
 import co.esekiels.cinelex.feature.details.DetailsScreen
 import co.esekiels.cinelex.feature.home.HomeScreen
+import co.esekiels.cinelex.feature.search.SearchScreen
 
 /*
  * Cinelex
@@ -57,29 +62,18 @@ fun CinelexMain(
     val backStack = rememberNavBackStack(CinelexRoute.Home)
     val navigator = remember(backStack) { CinelexNavigatorImpl(backStack) }
 
+    val showBottomBar = backStack.lastOrNull().let { it is CinelexRoute.Home || it is CinelexRoute.Search }
+
     CinelexTheme(darkTheme = darkTheme) {
         CompositionLocalProvider(
             LocalComposeNavigator provides navigator,
         ) {
-            NavDisplay(
+            CinelexScaffold(
                 backStack = backStack,
-                onBack = { backStack.removeLastOrNull() },
-                entryDecorators = listOf(
-                    rememberSaveableStateHolderNavEntryDecorator(),
-                    rememberViewModelStoreNavEntryDecorator(),
-                ),
-                entryProvider = entryProvider<NavKey> {
-                    entry<CinelexRoute.Home> {
-                        HomeScreen(
-                            isDarkTheme = darkTheme,
-                            onLanguageClick = { showLanguagePicker = true },
-                            onThemeClick = { showThemePicker = true },
-                        )
-                    }
-                    entry<CinelexRoute.Details> { route ->
-                        DetailsScreen(movieId = route.movieId)
-                    }
-                },
+                showBottomBar = showBottomBar,
+                darkTheme = darkTheme,
+                onLanguageClick = { showLanguagePicker = true },
+                onThemeClick = { showThemePicker = true },
             )
         }
 
@@ -104,6 +98,62 @@ fun CinelexMain(
                 onDismiss = { showThemePicker = false },
             )
         }
+    }
+}
+
+@Composable
+private fun CinelexScaffold(
+    backStack: MutableList<NavKey>,
+    showBottomBar: Boolean,
+    darkTheme: Boolean,
+    onLanguageClick: () -> Unit,
+    onThemeClick: () -> Unit,
+) {
+    Scaffold(
+        containerColor = CinelexTheme.colors.background,
+        bottomBar = {
+            if (showBottomBar) {
+                val items = listOf(
+                    BottomBarItem(Icons.Filled.Home, stringResource(R.string.home)),
+                    BottomBarItem(Icons.Filled.Search, stringResource(R.string.search)),
+                )
+                val routes = listOf(CinelexRoute.Home, CinelexRoute.Search)
+                val selectedIndex = routes.indexOfFirst { it == backStack.lastOrNull() }
+                CinelexBottomBar(
+                    items = items,
+                    selectedIndex = selectedIndex,
+                    onItemSelected = { index ->
+                        backStack.removeAll { true }
+                        backStack.add(routes[index])
+                    },
+                )
+            }
+        },
+    ) { innerPadding ->
+        NavDisplay(
+            backStack = backStack,
+            onBack = { backStack.removeLastOrNull() },
+            entryDecorators = listOf(
+                rememberSaveableStateHolderNavEntryDecorator(),
+                rememberViewModelStoreNavEntryDecorator(),
+            ),
+            entryProvider = entryProvider<NavKey> {
+                entry<CinelexRoute.Home> {
+                    HomeScreen(
+                        isDarkTheme = darkTheme,
+                        onLanguageClick = onLanguageClick,
+                        onThemeClick = onThemeClick,
+                    )
+                }
+                entry<CinelexRoute.Search> {
+                    SearchScreen()
+                }
+                entry<CinelexRoute.Details> { route ->
+                    DetailsScreen(movieId = route.movieId)
+                }
+            },
+            modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
+        )
     }
 }
 

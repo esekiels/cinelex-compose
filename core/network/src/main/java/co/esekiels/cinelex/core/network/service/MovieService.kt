@@ -24,6 +24,13 @@ interface MovieService {
         @Query("page") page: Int = 1
     ): Response<MovieResponse>
 
+    @GET(ApiConstant.SEARCH)
+    suspend fun searchMovies(
+        @Query("query") query: String,
+        @Query("language") language: String = "en",
+        @Query("page") page: Int = 1
+    ): Response<MovieResponse>
+
     @GET(ApiConstant.DETAILS)
     suspend fun fetchDetails(
         @Path("id") id: Int,

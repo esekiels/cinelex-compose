@@ -11,6 +11,10 @@
    <string name="language_english">Inggris</string>
    <string name="language_indonesian">Indonesia</string>
 
+   <!-- Bottom Navigation -->
+   <string name="home">Beranda</string>
+   <string name="search">Cari</string>
+
    <!-- Home -->
    <string name="now_playing">Sedang Tayang</string>
    <string name="upcoming">Akan Datang</string>
@@ -24,6 +28,11 @@
    <string name="producer">Produser</string>
    <string name="writer">Penulis</string>
    <string name="trailers">Trailer</string>
+
+   <!-- Search -->
+   <string name="search_prompt">Cari film…</string>
+   <string name="recommendations">Rekomendasi</string>
+   <string name="no_results">Tidak ada hasil untuk \"%s\"</string>
 
    <!-- Theme picker -->
    <string name="picker_theme_title">Pilih Tema</string>

@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import co.esekiels.cinelex.core.design.theme.CinelexTheme
 import co.esekiels.cinelex.core.model.MovieDetails
+import co.esekiels.cinelex.core.testing.MovieDetailsStub
 import coil3.compose.AsyncImage
 
 @Composable
@@ -145,7 +146,7 @@ private fun Rating(movie: MovieDetails) {
 private fun DetailsContentLightPreview() {
     CinelexTheme(darkTheme = false) {
         Column(modifier = Modifier.background(CinelexTheme.colors.background)) {
-            DetailsContent(MovieDetails.stub)
+            DetailsContent(MovieDetailsStub)
         }
     }
 }
@@ -155,7 +156,7 @@ private fun DetailsContentLightPreview() {
 private fun DetailsContentDarkPreview() {
     CinelexTheme(darkTheme = true) {
         Column(modifier = Modifier.background(CinelexTheme.colors.background)) {
-            DetailsContent(MovieDetails.stub)
+            DetailsContent(MovieDetailsStub)
         }
     }
 }

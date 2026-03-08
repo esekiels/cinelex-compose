@@ -12,7 +12,6 @@ import co.esekiels.cinelex.core.common.di.Dispatcher
 import co.esekiels.cinelex.core.database.dao.MovieDao
 import co.esekiels.cinelex.core.database.entity.mapper.toDomain
 import co.esekiels.cinelex.core.database.entity.mapper.toEntities
-import co.esekiels.cinelex.core.database.entity.mapper.toEntity
 import co.esekiels.cinelex.core.datastore.UserPreferencesDataSource
 import co.esekiels.cinelex.core.model.Language
 import co.esekiels.cinelex.core.model.Movie
@@ -36,25 +35,33 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun fetchTopRated(): List<Movie> = fetchMovies(ApiConstant.TOP_RATED)
     override suspend fun fetchPopular(): List<Movie> = fetchMovies(ApiConstant.POPULAR)
 
+    override suspend fun searchMovies(query: String, page: Int): SearchResult =
+        withContext(ioDispatcher) {
+            when (val response = client.searchMovies(query, language(), page)) {
+                is ApiResponse.Success -> SearchResult(
+                    movies = response.body.results,
+                    totalPages = response.body.totalPages,
+                )
+                else -> throw response.asException()
+            }
+        }
+
     override suspend fun fetchMovieDetails(id: Int): MovieDetails = withContext(ioDispatcher) {
-        val language = Language.fromCode(userPreferencesDataSource.getLanguage()).tmdbCode
-        when (val response = client.fetchDetails(id, language)) {
+        when (val response = client.fetchDetails(id, language())) {
             is ApiResponse.Success -> {
-                dao.saveMovieDetails(response.body.toEntity())
+                dao.saveMovieDetails(response.body.toEntities())
                 response.body
             }
             is ApiResponse.NetworkError -> {
                 val cached = dao.fetchMovieDetailsById(id)
-                if (cached != null) cached.toDomain()
-                else throw response.asException()
+	            cached?.toDomain() ?: throw response.asException()
             }
             else -> throw response.asException()
         }
     }
 
     private suspend fun fetchMovies(category: String): List<Movie> = withContext(ioDispatcher) {
-        val language = Language.fromCode(userPreferencesDataSource.getLanguage()).tmdbCode
-        when (val response = client.fetchMovies(category, language)) {
+        when (val response = client.fetchMovies(category, language())) {
             is ApiResponse.Success -> {
                 dao.clearByCategory(category)
                 dao.saveMovies(response.body.results.toEntities(category))
@@ -68,4 +75,7 @@ class MovieRepositoryImpl @Inject constructor(
             else -> throw response.asException()
         }
     }
+	
+	private suspend fun language() =
+		Language.fromCode(userPreferencesDataSource.getLanguage()).tmdbCode
 }

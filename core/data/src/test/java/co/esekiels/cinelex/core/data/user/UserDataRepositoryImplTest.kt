@@ -26,7 +26,7 @@ import org.junit.Test
 
 class UserDataRepositoryImplTest {
 
-    private lateinit var repository: UserDataRepositoryImpl
+    private lateinit var repository: UserDataRepository
     private lateinit var preferencesDataSource: UserPreferencesDataSource
 
     @get:Rule

@@ -10,6 +10,7 @@ package co.esekiels.cinelex.core.database.di
 import android.content.Context
 import androidx.room.Room
 import co.esekiels.cinelex.core.database.CinelexDatabase
+import co.esekiels.cinelex.core.database.dao.GenreDao
 import co.esekiels.cinelex.core.database.dao.MovieDao
 import dagger.Module
 import dagger.Provides
@@ -33,4 +34,7 @@ internal object DatabaseModule {
 
     @Provides
     fun provideMovieDao(database: CinelexDatabase): MovieDao = database.movieDao()
+
+    @Provides
+    fun provideGenreDao(database: CinelexDatabase): GenreDao = database.genreDao()
 }
