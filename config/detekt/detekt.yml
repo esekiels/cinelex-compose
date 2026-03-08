@@ -953,8 +953,7 @@ style:
 formatting:
   active: true
   Indentation:
-    active: true
-    indentSize: 4
+    active: false
   ParameterListWrapping:
     active: true
     indentSize: 4

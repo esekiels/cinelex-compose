@@ -31,9 +31,9 @@ internal fun Project.configureKotlinAndroid(
         compilerOptions {
             freeCompilerArgs.set(
                 freeCompilerArgs.getOrElse(emptyList()) + listOf(
-                    "-Xopt-in=kotlin.RequiresOptIn",
-                    "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                    "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api"
+                    "-opt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
                 )
             )
             

@@ -17,6 +17,14 @@
    <string name="top_rated">Rating Tertinggi</string>
    <string name="popular">Populer</string>
 
+   <!-- Details -->
+   <string name="cast">Pemeran</string>
+   <string name="crew">Kru</string>
+   <string name="director">Sutradara</string>
+   <string name="producer">Produser</string>
+   <string name="writer">Penulis</string>
+   <string name="trailers">Trailer</string>
+
    <!-- Theme picker -->
    <string name="picker_theme_title">Pilih Tema</string>
    <string name="theme_follow_system">Ikuti Sistem</string>

@@ -7,7 +7,7 @@
 
 package co.esekiels.cinelex.feature.details
 
-import co.esekiels.cinelex.core.data.details.DetailsRepository
+import co.esekiels.cinelex.core.data.movie.MovieRepository
 import co.esekiels.cinelex.core.model.MovieDetails
 import co.esekiels.cinelex.core.testing.MainCoroutinesRule
 import kotlinx.coroutines.test.runTest
@@ -22,7 +22,7 @@ import org.mockito.kotlin.whenever
 class DetailsViewModelTest {
 
     private lateinit var viewModel: DetailsViewModel
-    private val detailsRepository: DetailsRepository = mock()
+    private val movieRepository: MovieRepository = mock()
 
     @get:Rule
     val coroutinesRule = MainCoroutinesRule()
@@ -30,9 +30,9 @@ class DetailsViewModelTest {
     @Test
     fun shouldFetchMovieDetails() = runTest {
         val stub = MovieDetails.stub
-        whenever(detailsRepository.fetchMovieDetails(stub.id)).thenReturn(stub)
+        whenever(movieRepository.fetchMovieDetails(stub.id)).thenReturn(stub)
 
-        viewModel = DetailsViewModel(detailsRepository)
+        viewModel = DetailsViewModel(movieRepository)
         viewModel.loadDetails(stub.id)
 
         assertNotNull(viewModel.movieDetails.value)
@@ -40,6 +40,6 @@ class DetailsViewModelTest {
         assertEquals(stub.title, viewModel.movieDetails.value!!.title)
         assertEquals(DetailsUiState.Idle, viewModel.uiState.value)
 
-        verify(detailsRepository).fetchMovieDetails(stub.id)
+        verify(movieRepository).fetchMovieDetails(stub.id)
     }
 }

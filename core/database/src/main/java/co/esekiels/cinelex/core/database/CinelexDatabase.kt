@@ -14,7 +14,6 @@ import co.esekiels.cinelex.core.database.converter.CreditsConverter
 import co.esekiels.cinelex.core.database.converter.GenreListConverter
 import co.esekiels.cinelex.core.database.converter.VideoResponseConverter
 import co.esekiels.cinelex.core.database.dao.MovieDao
-import co.esekiels.cinelex.core.database.dao.MovieDetailsDao
 import co.esekiels.cinelex.core.database.entity.MovieDetailsEntity
 import co.esekiels.cinelex.core.database.entity.MovieEntity
 
@@ -28,7 +27,6 @@ import co.esekiels.cinelex.core.database.entity.MovieEntity
     CreditsConverter::class,
     VideoResponseConverter::class,
 )
-abstract class CinelexDatabase: RoomDatabase() {
+abstract class CinelexDatabase : RoomDatabase() {
     abstract fun movieDao(): MovieDao
-    abstract fun movieDetailsDao(): MovieDetailsDao
 }

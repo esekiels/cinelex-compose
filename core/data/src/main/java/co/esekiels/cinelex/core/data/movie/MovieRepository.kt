@@ -1,17 +1,19 @@
 /*
  * Cinelex
- * HomeRepository
+ * MovieRepository
  *
- * Created by Esekiel Surbakti on 04/03/26
+ * Created by Esekiel Surbakti on 08/03/26
  */
 
-package co.esekiels.cinelex.core.data.home
+package co.esekiels.cinelex.core.data.movie
 
 import co.esekiels.cinelex.core.model.Movie
+import co.esekiels.cinelex.core.model.MovieDetails
 
-interface HomeRepository {
+interface MovieRepository {
     suspend fun fetchNowPlaying(): List<Movie>
     suspend fun fetchUpcoming(): List<Movie>
     suspend fun fetchTopRated(): List<Movie>
     suspend fun fetchPopular(): List<Movie>
+    suspend fun fetchMovieDetails(id: Int): MovieDetails
 }
