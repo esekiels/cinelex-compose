@@ -17,6 +17,14 @@
     <string name="top_rated">Top Rated</string>
     <string name="popular">Popular</string>
 
+    <!-- Details -->
+    <string name="cast">Cast</string>
+    <string name="crew">Crew</string>
+    <string name="director">Director</string>
+    <string name="producer">Producer</string>
+    <string name="writer">Writer</string>
+    <string name="trailers">Trailers</string>
+
     <!-- Theme picker -->
     <string name="picker_theme_title">Select Theme</string>
     <string name="theme_follow_system">Follow System</string>
