@@ -33,9 +33,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import co.esekiels.cinelex.core.design.component.CinelexAppBar
 import co.esekiels.cinelex.core.design.theme.CinelexTheme
 import co.esekiels.cinelex.core.model.Movie
+import co.esekiels.cinelex.core.navigation.CinelexRoute
+import co.esekiels.cinelex.core.navigation.LocalComposeNavigator
 import co.esekiels.cinelex.core.testing.MovieStubs
 import co.esekiels.cinelex.feature.home.component.MovieBackdropCarousel
 import co.esekiels.cinelex.feature.home.component.MoviePosterCarousel
@@ -46,9 +54,9 @@ fun HomeScreen(
     isDarkTheme: Boolean = false,
     onLanguageClick: () -> Unit = {},
     onThemeClick: () -> Unit = {},
-    onMovieClick: (Movie) -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
+    val navigator = LocalComposeNavigator.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val nowPlaying by viewModel.nowPlayingState.collectAsStateWithLifecycle()
     val upcoming by viewModel.upcomingState.collectAsStateWithLifecycle()
@@ -64,7 +72,7 @@ fun HomeScreen(
         popular = popular,
         onLanguageClick = onLanguageClick,
         onThemeClick = onThemeClick,
-        onMovieClick = onMovieClick,
+        onMovieClick = { movie -> navigator.navigate(CinelexRoute.Details(movie.id)) },
         onRefresh = viewModel::refresh,
     )
 
@@ -100,11 +108,7 @@ private fun HomeContent(
     onRefresh: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        CinelexAppBar(
-            isDarkTheme = isDarkTheme,
-            onLanguageClick = onLanguageClick,
-            onThemeClick = onThemeClick,
-        )
+        HomeAppBar(isDarkTheme, onLanguageClick, onThemeClick)
         PullToRefreshBox(
             isRefreshing = isLoading,
             onRefresh = onRefresh,
@@ -150,6 +154,31 @@ private fun HomeContent(
             }
         }
     }
+}
+
+@Composable
+private fun HomeAppBar(
+    isDarkTheme: Boolean,
+    onLanguageClick: () -> Unit,
+    onThemeClick: () -> Unit,
+) {
+    CinelexAppBar(
+        title = stringResource(R.string.app_name),
+        actions = {
+            IconButton(onClick = onLanguageClick) {
+                Icon(
+                    imageVector = Icons.Default.Language,
+                    contentDescription = stringResource(R.string.action_language),
+                )
+            }
+            IconButton(onClick = onThemeClick) {
+                Icon(
+                    imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
+                    contentDescription = stringResource(R.string.action_theme),
+                )
+            }
+        },
+    )
 }
 
 @Composable
