@@ -7,6 +7,7 @@
 
 package co.esekiels.cinelex.core.network.service
 
+import co.esekiels.cinelex.core.model.MovieDetails
 import co.esekiels.cinelex.core.network.ApiResponse
 import co.esekiels.cinelex.core.network.model.MovieResponse
 import kotlinx.serialization.json.Json
@@ -19,4 +20,7 @@ class MovieClient @Inject constructor(
     
     suspend fun fetchMovies(category: String, language: String = "en"): ApiResponse<MovieResponse> =
         ApiResponse.safeApiCall(json) { service.fetchMovies(category, language) }
+
+    suspend fun fetchDetails(id: Int, language: String = "en"): ApiResponse<MovieDetails> =
+        ApiResponse.safeApiCall(json) { service.fetchDetails(id, language) }
 }

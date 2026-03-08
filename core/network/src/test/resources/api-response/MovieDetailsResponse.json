@@ -1,0 +1,33 @@
+{
+  "id": 278,
+  "title": "The Shawshank Redemption",
+  "backdrop_path": "/zfbjgQE1uSd9wiPTX4VzsLi0rGG.jpg",
+  "poster_path": "/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
+  "overview": "Imprisoned in the 1940s for the double murder of his wife and her lover.",
+  "vote_average": 8.7,
+  "release_date": "1994-09-23",
+  "runtime": 142,
+  "genres": [
+    { "id": 18, "name": "Drama" },
+    { "id": 80, "name": "Crime" }
+  ],
+  "credits": {
+    "cast": [
+      { "id": 504, "name": "Tim Robbins", "character": "Andy Dufresne", "profile_path": "/path.jpg" }
+    ],
+    "crew": [
+      { "id": 4027, "name": "Frank Darabont", "job": "Director" }
+    ]
+  },
+  "videos": {
+    "results": [
+      {
+        "id": "1",
+        "key": "PLl99DlL6b4",
+        "name": "Official Trailer",
+        "site": "YouTube",
+        "type": "Trailer"
+      }
+    ]
+  }
+}
