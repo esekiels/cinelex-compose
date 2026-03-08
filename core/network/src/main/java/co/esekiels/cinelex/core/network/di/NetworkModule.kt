@@ -9,6 +9,8 @@ package co.esekiels.cinelex.core.network.di
 
 import co.esekiels.cinelex.core.network.BuildConfig
 import co.esekiels.cinelex.core.network.interceptor.AuthInterceptor
+import co.esekiels.cinelex.core.network.service.GenreClient
+import co.esekiels.cinelex.core.network.service.GenreService
 import co.esekiels.cinelex.core.network.service.MovieClient
 import co.esekiels.cinelex.core.network.service.MovieService
 import dagger.Module
@@ -69,7 +71,19 @@ internal object NetworkModule {
     
     @Provides
     @Singleton
-    fun provideMovieClient(movieService: MovieService, json: Json): MovieClient {
-        return MovieClient(movieService, json)
+    fun provideMovieClient(service: MovieService, json: Json): MovieClient {
+        return MovieClient(service, json)
     }
+	
+	@Provides
+	@Singleton
+	fun provideGenreService(retrofit: Retrofit): GenreService {
+		return retrofit.create(GenreService::class.java)
+	}
+	
+	@Provides
+	@Singleton
+	fun provideGenreClient(service: GenreService, json: Json): GenreClient {
+		return GenreClient(service, json)
+	}
 }

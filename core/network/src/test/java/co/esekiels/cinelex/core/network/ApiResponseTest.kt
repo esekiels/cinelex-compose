@@ -26,7 +26,11 @@ class ApiResponseTest {
 
     @Test
     fun shouldReturnSuccessResponse() = runTest {
-        val movieResponse = MovieResponse(results = emptyList())
+        val movieResponse = MovieResponse(
+	        page= 1,
+	        totalPages = 10,
+	        results = emptyList()
+		)
         val result = ApiResponse.safeApiCall(json) {
             Response.success(movieResponse)
         }

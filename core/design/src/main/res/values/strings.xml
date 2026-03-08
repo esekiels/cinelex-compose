@@ -11,6 +11,10 @@
     <string name="language_english">English</string>
     <string name="language_indonesian">Indonesian</string>
 
+    <!-- Bottom Navigation -->
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+
     <!-- Home -->
     <string name="now_playing">Now Playing</string>
     <string name="upcoming">Upcoming</string>
@@ -24,6 +28,11 @@
     <string name="producer">Producer</string>
     <string name="writer">Writer</string>
     <string name="trailers">Trailers</string>
+
+    <!-- Search -->
+    <string name="search_prompt">Search movies…</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="no_results">No results for \"%s\"</string>
 
     <!-- Theme picker -->
     <string name="picker_theme_title">Select Theme</string>

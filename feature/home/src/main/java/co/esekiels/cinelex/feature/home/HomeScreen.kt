@@ -23,7 +23,11 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import co.esekiels.cinelex.core.design.R
@@ -63,9 +67,15 @@ fun HomeScreen(
     val topRated by viewModel.topRatedState.collectAsStateWithLifecycle()
     val popular by viewModel.popularState.collectAsStateWithLifecycle()
 
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    LaunchedEffect(uiState) {
+        if (uiState != HomeUiState.Loading) isRefreshing = false
+    }
+
     HomeContent(
         isDarkTheme = isDarkTheme,
-        isLoading = uiState is HomeUiState.Loading,
+        isRefreshing = isRefreshing,
         nowPlaying = nowPlaying,
         upcoming = upcoming,
         topRated = topRated,
@@ -73,7 +83,10 @@ fun HomeScreen(
         onLanguageClick = onLanguageClick,
         onThemeClick = onThemeClick,
         onMovieClick = { movie -> navigator.navigate(CinelexRoute.Details(movie.id)) },
-        onRefresh = viewModel::refresh,
+        onRefresh = {
+            isRefreshing = true
+            viewModel.refresh()
+        },
     )
 
     if (uiState is HomeUiState.Error) {
@@ -97,7 +110,7 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     isDarkTheme: Boolean,
-    isLoading: Boolean,
+    isRefreshing: Boolean,
     nowPlaying: List<Movie>,
     upcoming: List<Movie>,
     topRated: List<Movie>,
@@ -110,7 +123,7 @@ private fun HomeContent(
     Column(modifier = Modifier.fillMaxSize()) {
         HomeAppBar(isDarkTheme, onLanguageClick, onThemeClick)
         PullToRefreshBox(
-            isRefreshing = isLoading,
+            isRefreshing = isRefreshing,
             onRefresh = onRefresh,
             modifier = Modifier.fillMaxSize(),
         ) {
@@ -242,7 +255,7 @@ private fun HomeScreenLightPreview() {
     CinelexTheme(darkTheme = false) {
         HomeContent(
             isDarkTheme = false,
-            isLoading = false,
+            isRefreshing = false,
             nowPlaying = MovieStubs,
             upcoming = MovieStubs,
             topRated = MovieStubs,
@@ -261,7 +274,7 @@ private fun HomeScreenDarkPreview() {
     CinelexTheme(darkTheme = true) {
         HomeContent(
             isDarkTheme = true,
-            isLoading = false,
+            isRefreshing = false,
             nowPlaying = MovieStubs,
             upcoming = MovieStubs,
             topRated = MovieStubs,
@@ -280,7 +293,7 @@ private fun HomeScreenLoadingPreview() {
     CinelexTheme(darkTheme = false) {
         HomeContent(
             isDarkTheme = false,
-            isLoading = true,
+            isRefreshing = true,
             nowPlaying = emptyList(),
             upcoming = emptyList(),
             topRated = emptyList(),

@@ -7,6 +7,8 @@
 
 package co.esekiels.cinelex.core.data.di
 
+import co.esekiels.cinelex.core.data.genre.GenreRepository
+import co.esekiels.cinelex.core.data.genre.GenreRepositoryImpl
 import co.esekiels.cinelex.core.data.movie.MovieRepository
 import co.esekiels.cinelex.core.data.movie.MovieRepositoryImpl
 import co.esekiels.cinelex.core.data.user.UserDataRepository
@@ -22,6 +24,9 @@ internal interface DataModule {
 
     @Binds
     fun bindMovieRepository(movieRepositoryImpl: MovieRepositoryImpl): MovieRepository
+
+    @Binds
+    fun bindGenreRepository(genreRepositoryImpl: GenreRepositoryImpl): GenreRepository
 
     @Binds
     fun bindUserDataRepository(userDataRepositoryImpl: UserDataRepositoryImpl): UserDataRepository

@@ -10,7 +10,7 @@ package co.esekiels.cinelex.core.database.entity.mapper
 import co.esekiels.cinelex.core.database.entity.MovieDetailsEntity
 import co.esekiels.cinelex.core.model.MovieDetails
 
-fun MovieDetails.toEntity(): MovieDetailsEntity = MovieDetailsEntity(
+fun MovieDetails.toEntities(): MovieDetailsEntity = MovieDetailsEntity(
     id = id,
     title = title,
     backdropPath = backdropPath,

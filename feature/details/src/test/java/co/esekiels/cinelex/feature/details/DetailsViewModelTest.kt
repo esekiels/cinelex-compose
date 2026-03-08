@@ -8,8 +8,8 @@
 package co.esekiels.cinelex.feature.details
 
 import co.esekiels.cinelex.core.data.movie.MovieRepository
-import co.esekiels.cinelex.core.model.MovieDetails
 import co.esekiels.cinelex.core.testing.MainCoroutinesRule
+import co.esekiels.cinelex.core.testing.MovieDetailsStub
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -29,7 +29,7 @@ class DetailsViewModelTest {
 
     @Test
     fun shouldFetchMovieDetails() = runTest {
-        val stub = MovieDetails.stub
+        val stub = MovieDetailsStub
         whenever(movieRepository.fetchMovieDetails(stub.id)).thenReturn(stub)
 
         viewModel = DetailsViewModel(movieRepository)

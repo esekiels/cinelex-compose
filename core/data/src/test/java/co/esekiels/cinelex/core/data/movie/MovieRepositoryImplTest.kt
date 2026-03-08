@@ -9,14 +9,13 @@ package co.esekiels.cinelex.core.data.movie
 
 import co.esekiels.cinelex.core.database.dao.MovieDao
 import co.esekiels.cinelex.core.database.entity.mapper.toEntities
-import co.esekiels.cinelex.core.database.entity.mapper.toEntity
 import co.esekiels.cinelex.core.datastore.UserPreferencesDataSource
 import co.esekiels.cinelex.core.model.Language
-import co.esekiels.cinelex.core.model.MovieDetails
 import co.esekiels.cinelex.core.network.ApiResponse
 import co.esekiels.cinelex.core.network.model.MovieResponse
 import co.esekiels.cinelex.core.network.service.MovieClient
 import co.esekiels.cinelex.core.testing.MainCoroutinesRule
+import co.esekiels.cinelex.core.testing.MovieDetailsStub
 import co.esekiels.cinelex.core.testing.MovieStubs
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -31,7 +30,7 @@ import java.io.IOException
 
 class MovieRepositoryImplTest {
 
-    private lateinit var repository: MovieRepositoryImpl
+    private lateinit var repository: MovieRepository
     private val client: MovieClient = mock()
     private val dao: MovieDao = mock()
     private val userPreferencesDataSource: UserPreferencesDataSource = mock()
@@ -52,7 +51,7 @@ class MovieRepositoryImplTest {
     @Test
     fun shouldFetchMoviesFromNetwork() = runTest {
         val category = "movie/popular"
-        val mockResponse = MovieResponse(results = MovieStubs)
+        val mockResponse = MovieResponse(page= 1, totalPages = 10, results = MovieStubs)
         whenever(userPreferencesDataSource.getLanguage()).thenReturn(Language.ENGLISH.code)
         whenever(client.fetchMovies(category, Language.ENGLISH.tmdbCode))
             .thenReturn(ApiResponse.Success(mockResponse))
@@ -85,7 +84,7 @@ class MovieRepositoryImplTest {
 
     @Test
     fun shouldFetchDetailsFromNetwork() = runTest {
-        val stub = MovieDetails.stub
+        val stub = MovieDetailsStub
         whenever(userPreferencesDataSource.getLanguage()).thenReturn(Language.ENGLISH.code)
         whenever(client.fetchDetails(stub.id, Language.ENGLISH.tmdbCode))
             .thenReturn(ApiResponse.Success(stub))
@@ -95,17 +94,17 @@ class MovieRepositoryImplTest {
         assertEquals(stub.id, result.id)
         assertEquals(stub.title, result.title)
         verify(client, atLeastOnce()).fetchDetails(stub.id, Language.ENGLISH.tmdbCode)
-        verify(dao, atLeastOnce()).saveMovieDetails(stub.toEntity())
+        verify(dao, atLeastOnce()).saveMovieDetails(stub.toEntities())
     }
 
     @Test
     fun shouldFetchDetailsFromDatabaseOnNetworkError() = runTest {
-        val stub = MovieDetails.stub
+        val stub = MovieDetailsStub
         whenever(userPreferencesDataSource.getLanguage()).thenReturn(Language.ENGLISH.code)
         whenever(client.fetchDetails(stub.id, Language.ENGLISH.tmdbCode))
             .thenReturn(ApiResponse.NetworkError(IOException("No internet")))
         whenever(dao.fetchMovieDetailsById(stub.id))
-            .thenReturn(stub.toEntity())
+            .thenReturn(stub.toEntities())
 
         val result = repository.fetchMovieDetails(stub.id)
 
