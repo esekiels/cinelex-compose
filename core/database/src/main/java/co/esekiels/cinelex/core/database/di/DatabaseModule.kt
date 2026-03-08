@@ -11,6 +11,7 @@ import android.content.Context
 import androidx.room.Room
 import co.esekiels.cinelex.core.database.CinelexDatabase
 import co.esekiels.cinelex.core.database.dao.MovieDao
+import co.esekiels.cinelex.core.database.dao.MovieDetailsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +22,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object DatabaseModule {
-    
+
     @Provides
     @Singleton
     fun provideCinelexDatabase(@ApplicationContext context: Context): CinelexDatabase =
@@ -29,8 +30,11 @@ internal object DatabaseModule {
             context,
             CinelexDatabase::class.java,
             "cinelex-database"
-        ).build()
-    
+        ).fallbackToDestructiveMigration().build()
+
     @Provides
     fun provideMovieDao(database: CinelexDatabase): MovieDao = database.movieDao()
+
+    @Provides
+    fun provideMovieDetailsDao(database: CinelexDatabase): MovieDetailsDao = database.movieDetailsDao()
 }

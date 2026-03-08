@@ -13,6 +13,7 @@ import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,10 +22,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import co.esekiels.cinelex.core.design.R
 import co.esekiels.cinelex.core.design.theme.CinelexTheme
 import co.esekiels.cinelex.core.model.Language
 import co.esekiels.cinelex.core.model.UiTheme
+import co.esekiels.cinelex.core.navigation.CinelexNavigatorImpl
+import co.esekiels.cinelex.core.navigation.CinelexRoute
+import co.esekiels.cinelex.core.navigation.LocalComposeNavigator
+import co.esekiels.cinelex.feature.details.DetailsScreen
 import co.esekiels.cinelex.feature.home.HomeScreen
 
 /*
@@ -43,13 +54,34 @@ fun CinelexMain(
 ) {
     var showLanguagePicker by remember { mutableStateOf(false) }
     var showThemePicker by remember { mutableStateOf(false) }
+    val backStack = rememberNavBackStack(CinelexRoute.Home)
+    val navigator = remember(backStack) { CinelexNavigatorImpl(backStack) }
 
     CinelexTheme(darkTheme = darkTheme) {
-        HomeScreen(
-            isDarkTheme = darkTheme,
-            onLanguageClick = { showLanguagePicker = true },
-            onThemeClick = { showThemePicker = true },
-        )
+        CompositionLocalProvider(
+            LocalComposeNavigator provides navigator,
+        ) {
+            NavDisplay(
+                backStack = backStack,
+                onBack = { backStack.removeLastOrNull() },
+                entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator(),
+                ),
+                entryProvider = entryProvider<NavKey> {
+                    entry<CinelexRoute.Home> {
+                        HomeScreen(
+                            isDarkTheme = darkTheme,
+                            onLanguageClick = { showLanguagePicker = true },
+                            onThemeClick = { showThemePicker = true },
+                        )
+                    }
+                    entry<CinelexRoute.Details> { route ->
+                        DetailsScreen(movieId = route.movieId)
+                    }
+                },
+            )
+        }
 
         if (showLanguagePicker) {
             LanguagePickerDialog(

@@ -30,4 +30,15 @@ class MovieServiceTest : ApiAbstractTest<MovieService>() {
         assertTrue(response.isSuccessful)
         assertEquals(2, response.body()!!.results.size)
     }
+
+    @Test
+    fun fetchDetailsFromNetworkTest() = runTest {
+        enqueueResponse("MovieDetailsResponse.json")
+        val response = service.fetchDetails(278)
+        assertTrue(response.isSuccessful)
+        val details = response.body()!!
+        assertEquals(278, details.id)
+        assertEquals("The Shawshank Redemption", details.title)
+        assertEquals(2, details.genres.size)
+    }
 }
