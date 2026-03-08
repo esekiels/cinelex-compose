@@ -7,7 +7,7 @@
 
 package co.esekiels.cinelex.feature.home
 
-import co.esekiels.cinelex.core.data.home.HomeRepository
+import co.esekiels.cinelex.core.data.movie.MovieRepository
 import co.esekiels.cinelex.core.data.user.UserDataRepository
 import co.esekiels.cinelex.core.model.Language
 import co.esekiels.cinelex.core.testing.MainCoroutinesRule
@@ -25,7 +25,7 @@ import org.mockito.kotlin.whenever
 class HomeViewModelTest {
 
     private lateinit var viewModel: HomeViewModel
-    private val homeRepository: HomeRepository = mock()
+    private val movieRepository: MovieRepository = mock()
     private val userDataRepository: UserDataRepository = mock()
 
     @get:Rule
@@ -38,12 +38,12 @@ class HomeViewModelTest {
 
     @Test
     fun shouldFetchMovieList() = runTest {
-        whenever(homeRepository.fetchNowPlaying()).thenReturn(MovieStubs)
-        whenever(homeRepository.fetchUpcoming()).thenReturn(MovieStubs)
-        whenever(homeRepository.fetchTopRated()).thenReturn(MovieStubs)
-        whenever(homeRepository.fetchPopular()).thenReturn(MovieStubs)
+        whenever(movieRepository.fetchNowPlaying()).thenReturn(MovieStubs)
+        whenever(movieRepository.fetchUpcoming()).thenReturn(MovieStubs)
+        whenever(movieRepository.fetchTopRated()).thenReturn(MovieStubs)
+        whenever(movieRepository.fetchPopular()).thenReturn(MovieStubs)
 
-        viewModel = HomeViewModel(homeRepository, userDataRepository)
+        viewModel = HomeViewModel(movieRepository, userDataRepository)
 
         assertEquals(MovieStubs.size, viewModel.nowPlayingState.value.size)
         assertEquals(MovieStubs.size, viewModel.upcomingState.value.size)
@@ -51,9 +51,9 @@ class HomeViewModelTest {
         assertEquals(MovieStubs.size, viewModel.popularState.value.size)
         assertEquals(HomeUiState.Idle, viewModel.uiState.value)
 
-        verify(homeRepository).fetchNowPlaying()
-        verify(homeRepository).fetchUpcoming()
-        verify(homeRepository).fetchTopRated()
-        verify(homeRepository).fetchPopular()
+        verify(movieRepository).fetchNowPlaying()
+        verify(movieRepository).fetchUpcoming()
+        verify(movieRepository).fetchTopRated()
+        verify(movieRepository).fetchPopular()
     }
 }

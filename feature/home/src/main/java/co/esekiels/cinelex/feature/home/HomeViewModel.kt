@@ -9,7 +9,7 @@ package co.esekiels.cinelex.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.esekiels.cinelex.core.data.home.HomeRepository
+import co.esekiels.cinelex.core.data.movie.MovieRepository
 import co.esekiels.cinelex.core.data.user.UserDataRepository
 import co.esekiels.cinelex.core.model.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val homeRepository: HomeRepository,
+    private val movieRepository: MovieRepository,
     private val userDataRepository: UserDataRepository,
 ) : ViewModel() {
 
@@ -57,10 +57,10 @@ class HomeViewModel @Inject constructor(
         _popularState.value = emptyList()
 
         viewModelScope.launch {
-            val nowPlaying = async { fetchSafely { homeRepository.fetchNowPlaying() } }
-            val upcoming = async { fetchSafely { homeRepository.fetchUpcoming() } }
-            val topRated = async { fetchSafely { homeRepository.fetchTopRated() } }
-            val popular = async { fetchSafely { homeRepository.fetchPopular() } }
+            val nowPlaying = async { fetchSafely { movieRepository.fetchNowPlaying() } }
+            val upcoming = async { fetchSafely { movieRepository.fetchUpcoming() } }
+            val topRated = async { fetchSafely { movieRepository.fetchTopRated() } }
+            val popular = async { fetchSafely { movieRepository.fetchPopular() } }
 
             _nowPlayingState.value = nowPlaying.await()
             _upcomingState.value = upcoming.await()
