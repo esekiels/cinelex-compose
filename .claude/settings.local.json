@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(./gradlew :app:assembleDebug:*)",
-      "Bash(aapt2 dump:*)"
+      "Bash(aapt2 dump:*)",
+      "Bash(./gradlew :feature:details:compileDebugKotlin:*)"
     ]
   }
 }

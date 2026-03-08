@@ -12,4 +12,5 @@ object ApiConstant {
     const val UPCOMING = "movie/upcoming"
     const val TOP_RATED = "movie/top_rated"
     const val POPULAR = "movie/popular"
+    const val DETAILS = "movie/{id}"
 }

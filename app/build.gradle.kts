@@ -34,17 +34,19 @@ dependencies {
     implementation(projects.core.design)
     implementation(projects.core.data)
     implementation(projects.core.model)
+    implementation(projects.core.navigation)
 
-	// features
-	implementation(projects.feature.home)
+    // features
+    implementation(projects.feature.home)
+    implementation(projects.feature.details)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-	
+
     implementation(libs.androidx.activity.compose)
-   
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
