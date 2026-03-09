@@ -20,7 +20,11 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
-          bundler-cache: true
+
+      - name: Install Fastlane
+        run: |
+          bundle config --local frozen false
+          bundle install
 
       - name: Decode keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/cinelex-release.jks
