@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import co.esekiels.cinelex.core.design.theme.CinelexTheme
 import co.esekiels.cinelex.core.model.Movie
-import co.esekiels.cinelex.core.testing.MovieStubs
+import co.esekiels.cinelex.core.preview.MovieStubs
 import coil3.compose.AsyncImage
 
 @Composable
