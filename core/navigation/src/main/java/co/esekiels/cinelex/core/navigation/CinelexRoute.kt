@@ -16,5 +16,8 @@ sealed interface CinelexRoute : NavKey {
     data object Home : CinelexRoute
 
     @Serializable
+    data object Search : CinelexRoute
+
+    @Serializable
     data class Details(val movieId: Int) : CinelexRoute
 }

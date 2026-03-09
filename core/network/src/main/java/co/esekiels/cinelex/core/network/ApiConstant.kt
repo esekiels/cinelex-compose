@@ -13,4 +13,6 @@ object ApiConstant {
     const val TOP_RATED = "movie/top_rated"
     const val POPULAR = "movie/popular"
     const val DETAILS = "movie/{id}"
+    const val SEARCH = "search/movie"
+    const val GENRES = "genre/movie/list"
 }

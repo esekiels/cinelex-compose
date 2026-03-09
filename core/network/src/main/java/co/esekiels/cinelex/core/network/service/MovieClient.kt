@@ -21,6 +21,9 @@ class MovieClient @Inject constructor(
     suspend fun fetchMovies(category: String, language: String = "en"): ApiResponse<MovieResponse> =
         ApiResponse.safeApiCall(json) { service.fetchMovies(category, language) }
 
+    suspend fun searchMovies(query: String, language: String = "en", page: Int = 1): ApiResponse<MovieResponse> =
+        ApiResponse.safeApiCall(json) { service.searchMovies(query, language, page) }
+
     suspend fun fetchDetails(id: Int, language: String = "en"): ApiResponse<MovieDetails> =
         ApiResponse.safeApiCall(json) { service.fetchDetails(id, language) }
 }

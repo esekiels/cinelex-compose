@@ -46,20 +46,16 @@ internal fun DetailsSkeleton() {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
-            // Title
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 ShimmerBox(modifier = Modifier.width(200.dp).height(24.dp))
                 ShimmerBox(modifier = Modifier.width(260.dp).height(16.dp))
             }
-            // Overview
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 ShimmerBox(modifier = Modifier.fillMaxWidth().height(14.dp))
                 ShimmerBox(modifier = Modifier.fillMaxWidth().height(14.dp))
                 ShimmerBox(modifier = Modifier.fillMaxWidth(0.7f).height(14.dp))
             }
-            // Rating
             ShimmerBox(modifier = Modifier.width(180.dp).height(14.dp))
-            // Cast
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 ShimmerBox(modifier = Modifier.width(60.dp).height(20.dp))
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {

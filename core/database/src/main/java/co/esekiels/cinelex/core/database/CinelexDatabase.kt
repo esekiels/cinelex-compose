@@ -13,14 +13,15 @@ import androidx.room.TypeConverters
 import co.esekiels.cinelex.core.database.converter.CreditsConverter
 import co.esekiels.cinelex.core.database.converter.GenreListConverter
 import co.esekiels.cinelex.core.database.converter.VideoResponseConverter
+import co.esekiels.cinelex.core.database.dao.GenreDao
 import co.esekiels.cinelex.core.database.dao.MovieDao
-import co.esekiels.cinelex.core.database.dao.MovieDetailsDao
+import co.esekiels.cinelex.core.database.entity.GenreEntity
 import co.esekiels.cinelex.core.database.entity.MovieDetailsEntity
 import co.esekiels.cinelex.core.database.entity.MovieEntity
 
 @Database(
-    entities = [MovieEntity::class, MovieDetailsEntity::class],
-    version = 2,
+    entities = [MovieEntity::class, MovieDetailsEntity::class, GenreEntity::class],
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(
@@ -28,7 +29,7 @@ import co.esekiels.cinelex.core.database.entity.MovieEntity
     CreditsConverter::class,
     VideoResponseConverter::class,
 )
-abstract class CinelexDatabase: RoomDatabase() {
+abstract class CinelexDatabase : RoomDatabase() {
     abstract fun movieDao(): MovieDao
-    abstract fun movieDetailsDao(): MovieDetailsDao
+	abstract fun genreDao(): GenreDao
 }
