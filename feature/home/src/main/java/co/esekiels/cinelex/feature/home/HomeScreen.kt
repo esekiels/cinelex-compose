@@ -48,7 +48,7 @@ import co.esekiels.cinelex.core.design.theme.CinelexTheme
 import co.esekiels.cinelex.core.model.Movie
 import co.esekiels.cinelex.core.navigation.CinelexRoute
 import co.esekiels.cinelex.core.navigation.LocalComposeNavigator
-import co.esekiels.cinelex.core.testing.MovieStubs
+import co.esekiels.cinelex.core.preview.MovieStubs
 import co.esekiels.cinelex.feature.home.component.MovieBackdropCarousel
 import co.esekiels.cinelex.feature.home.component.MoviePosterCarousel
 import co.esekiels.cinelex.core.design.component.ShimmerBox

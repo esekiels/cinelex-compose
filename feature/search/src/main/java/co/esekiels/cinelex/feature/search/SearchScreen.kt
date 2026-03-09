@@ -10,16 +10,13 @@ package co.esekiels.cinelex.feature.search
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.esekiels.cinelex.core.design.R
@@ -64,27 +61,19 @@ private fun SearchContent(
 	onMovieClick: (Movie) -> Unit,
 	onLoadMore: () -> Unit,
 ) {
-	Scaffold(
-		containerColor = CinelexTheme.colors.background,
-		topBar = { CinelexAppBar(title = stringResource(R.string.search)) },
-	) { innerPadding ->
-		Column(
-			modifier = Modifier
-				.fillMaxSize()
-				.padding(innerPadding),
-		) {
-			CinelexSearchBar(
-				query = query,
-				onQueryChanged = onQueryChanged,
-				placeholder = stringResource(R.string.search_prompt),
-			)
+	Column(modifier = Modifier.fillMaxSize()) {
+		CinelexAppBar(title = stringResource(R.string.search))
+		CinelexSearchBar(
+			query = query,
+			onQueryChanged = onQueryChanged,
+			placeholder = stringResource(R.string.search_prompt),
+		)
 
-			when {
-				uiState is SearchUiState.Loading -> LoadingContent()
-				query.isBlank() -> RecommendationList(recommendations, onMovieClick)
-				movies.isEmpty() -> EmptyContent(query)
-				else -> MovieList(movies, isLoadingMore, onMovieClick, onLoadMore)
-			}
+		when {
+			uiState is SearchUiState.Loading -> LoadingContent()
+			query.isBlank() -> RecommendationList(recommendations, onMovieClick)
+			movies.isEmpty() -> EmptyContent(query)
+			else -> MovieList(movies, isLoadingMore, onMovieClick, onLoadMore)
 		}
 	}
 }
