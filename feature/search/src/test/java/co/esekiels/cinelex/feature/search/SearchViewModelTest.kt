@@ -13,13 +13,17 @@ import co.esekiels.cinelex.core.data.movie.SearchResult
 import co.esekiels.cinelex.core.testing.GenreStubs
 import co.esekiels.cinelex.core.testing.MainCoroutinesRule
 import co.esekiels.cinelex.core.testing.MovieStubs
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -33,26 +37,32 @@ class SearchViewModelTest {
 	@get:Rule
 	val coroutinesRule = MainCoroutinesRule()
 
+	@Before
+	fun setup() {
+		whenever(genreRepository.fetchGenres()).thenReturn(flowOf(GenreStubs))
+		whenever(movieRepository.fetchPopular()).thenReturn(flowOf(MovieStubs))
+	}
+
 	@Test
 	fun shouldLoadRecommendationsOnInit() = runTest {
-		whenever(genreRepository.fetchGenres()).thenReturn(GenreStubs)
-		whenever(movieRepository.fetchPopular()).thenReturn(MovieStubs)
-
 		viewModel = SearchViewModel(movieRepository, genreRepository)
+
+		val values = mutableListOf<List<co.esekiels.cinelex.core.model.Movie>>()
+		backgroundScope.launch(coroutinesRule.testDispatcher) {
+			viewModel.recommendations.collect { values.add(it) }
+		}
 		advanceUntilIdle()
 
-		assertEquals(MovieStubs.size, viewModel.recommendations.value.size)
+		assertEquals(MovieStubs.size, values.last().size)
 		assertEquals(SearchUiState.Idle, viewModel.uiState.value)
 
-		verify(genreRepository).fetchGenres()
-		verify(movieRepository).fetchPopular()
+		verify(genreRepository, atLeastOnce()).fetchGenres()
+		verify(movieRepository, atLeastOnce()).fetchPopular()
 	}
 
 	@Test
 	fun shouldSearchMovies() = runTest {
 		val searchResult = SearchResult(movies = listOf(MovieStubs.first()), totalPages = 1)
-		whenever(genreRepository.fetchGenres()).thenReturn(GenreStubs)
-		whenever(movieRepository.fetchPopular()).thenReturn(MovieStubs)
 		whenever(movieRepository.searchMovies("shawshank", 1)).thenReturn(searchResult)
 
 		viewModel = SearchViewModel(movieRepository, genreRepository)
@@ -70,8 +80,6 @@ class SearchViewModelTest {
 
 	@Test
 	fun shouldSetErrorStateOnSearchFailure() = runTest {
-		whenever(genreRepository.fetchGenres()).thenReturn(GenreStubs)
-		whenever(movieRepository.fetchPopular()).thenReturn(MovieStubs)
 		whenever(movieRepository.searchMovies("error", 1)).thenThrow(RuntimeException("Network error"))
 
 		viewModel = SearchViewModel(movieRepository, genreRepository)
