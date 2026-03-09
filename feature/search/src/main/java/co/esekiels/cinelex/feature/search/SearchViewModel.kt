@@ -16,13 +16,16 @@ import co.esekiels.cinelex.core.model.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,8 +45,8 @@ class SearchViewModel @Inject constructor(
 	private val _movies = MutableStateFlow<List<Movie>>(emptyList())
 	val movies: StateFlow<List<Movie>> get() = _movies.asStateFlow()
 
-	private val _recommendations = MutableStateFlow<List<Movie>>(emptyList())
-	val recommendations: StateFlow<List<Movie>> get() = _recommendations.asStateFlow()
+	val recommendations: StateFlow<List<Movie>> = movieRepository.fetchPopular()
+		.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
 	private val _isLoadingMore = MutableStateFlow(false)
 	val isLoadingMore: StateFlow<Boolean> get() = _isLoadingMore.asStateFlow()
@@ -60,7 +63,16 @@ class SearchViewModel @Inject constructor(
 			.onEach { search(it) }
 			.launchIn(viewModelScope)
 
-		loadRecommendations()
+		viewModelScope.launch {
+			val cached = genreRepository.fetchGenres().first()
+			if (cached.isEmpty()) {
+				try { genreRepository.refreshGenres() } catch (_: Exception) { }
+			}
+		}
+
+		genreRepository.fetchGenres()
+			.onEach { genres = it }
+			.launchIn(viewModelScope)
 	}
 
 	fun onQueryChanged(newQuery: String) {
@@ -68,15 +80,6 @@ class SearchViewModel @Inject constructor(
 		if (newQuery.isBlank()) {
 			_movies.value = emptyList()
 			_uiState.value = SearchUiState.Idle
-		}
-	}
-
-	fun loadRecommendations() {
-		viewModelScope.launch {
-			try {
-				genres = genreRepository.fetchGenres()
-				_recommendations.value = movieRepository.fetchPopular().mapGenres()
-			} catch (_: Exception) { }
 		}
 	}
 

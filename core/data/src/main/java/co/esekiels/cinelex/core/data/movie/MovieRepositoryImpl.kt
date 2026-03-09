@@ -20,6 +20,8 @@ import co.esekiels.cinelex.core.network.ApiConstant
 import co.esekiels.cinelex.core.network.ApiResponse
 import co.esekiels.cinelex.core.network.service.MovieClient
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -30,10 +32,40 @@ class MovieRepositoryImpl @Inject constructor(
     @param:Dispatcher(CinelexDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : MovieRepository {
 
-    override suspend fun fetchNowPlaying(): List<Movie> = fetchMovies(ApiConstant.NOW_PLAYING)
-    override suspend fun fetchUpcoming(): List<Movie> = fetchMovies(ApiConstant.UPCOMING)
-    override suspend fun fetchTopRated(): List<Movie> = fetchMovies(ApiConstant.TOP_RATED)
-    override suspend fun fetchPopular(): List<Movie> = fetchMovies(ApiConstant.POPULAR)
+    override fun fetchNowPlaying(): Flow<List<Movie>> =
+        dao.fetchMovieListByCategoryFlow(ApiConstant.NOW_PLAYING).map { it.toDomain() }
+
+    override fun fetchUpcoming(): Flow<List<Movie>> =
+        dao.fetchMovieListByCategoryFlow(ApiConstant.UPCOMING).map { it.toDomain() }
+
+    override fun fetchTopRated(): Flow<List<Movie>> =
+        dao.fetchMovieListByCategoryFlow(ApiConstant.TOP_RATED).map { it.toDomain() }
+
+    override fun fetchPopular(): Flow<List<Movie>> =
+        dao.fetchMovieListByCategoryFlow(ApiConstant.POPULAR).map { it.toDomain() }
+
+    override suspend fun refreshMovies() = withContext(ioDispatcher) {
+        val language = language()
+        val categories = listOf(
+            ApiConstant.NOW_PLAYING,
+            ApiConstant.UPCOMING,
+            ApiConstant.TOP_RATED,
+            ApiConstant.POPULAR,
+        )
+        for (category in categories) {
+            when (val response = client.fetchMovies(category, language)) {
+                is ApiResponse.Success -> {
+                    dao.clearByCategory(category)
+                    dao.saveMovies(response.body.results.toEntities(category))
+                }
+                is ApiResponse.NetworkError -> {
+                    val cached = dao.fetchMovieListByCategory(category)
+                    if (cached.isEmpty()) throw response.asException()
+                }
+                else -> throw response.asException()
+            }
+        }
+    }
 
     override suspend fun searchMovies(query: String, page: Int): SearchResult =
         withContext(ioDispatcher) {
@@ -47,35 +79,18 @@ class MovieRepositoryImpl @Inject constructor(
         }
 
     override suspend fun fetchMovieDetails(id: Int): MovieDetails = withContext(ioDispatcher) {
+        val cached = dao.fetchMovieDetailsById(id)
+        if (cached != null) return@withContext cached.toDomain()
+
         when (val response = client.fetchDetails(id, language())) {
             is ApiResponse.Success -> {
                 dao.saveMovieDetails(response.body.toEntities())
                 response.body
             }
-            is ApiResponse.NetworkError -> {
-                val cached = dao.fetchMovieDetailsById(id)
-	            cached?.toDomain() ?: throw response.asException()
-            }
             else -> throw response.asException()
         }
     }
 
-    private suspend fun fetchMovies(category: String): List<Movie> = withContext(ioDispatcher) {
-        when (val response = client.fetchMovies(category, language())) {
-            is ApiResponse.Success -> {
-                dao.clearByCategory(category)
-                dao.saveMovies(response.body.results.toEntities(category))
-                dao.fetchMovieListByCategory(category).toDomain()
-            }
-            is ApiResponse.NetworkError -> {
-                val cached = dao.fetchMovieListByCategory(category)
-                if (cached.isNotEmpty()) cached.toDomain()
-                else throw response.asException()
-            }
-            else -> throw response.asException()
-        }
-    }
-	
 	private suspend fun language() =
 		Language.fromCode(userPreferencesDataSource.getLanguage()).tmdbCode
 }
