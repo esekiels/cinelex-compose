@@ -9,6 +9,7 @@ package co.esekiels.cinelex.core.data.movie
 
 import co.esekiels.cinelex.core.model.Movie
 import co.esekiels.cinelex.core.model.MovieDetails
+import kotlinx.coroutines.flow.Flow
 
 data class SearchResult(
     val movies: List<Movie>,
@@ -16,10 +17,11 @@ data class SearchResult(
 )
 
 interface MovieRepository {
-    suspend fun fetchNowPlaying(): List<Movie>
-    suspend fun fetchUpcoming(): List<Movie>
-    suspend fun fetchTopRated(): List<Movie>
-    suspend fun fetchPopular(): List<Movie>
+    fun fetchNowPlaying(): Flow<List<Movie>>
+    fun fetchUpcoming(): Flow<List<Movie>>
+    fun fetchTopRated(): Flow<List<Movie>>
+    fun fetchPopular(): Flow<List<Movie>>
+    suspend fun refreshMovies()
     suspend fun searchMovies(query: String, page: Int = 1): SearchResult
     suspend fun fetchMovieDetails(id: Int): MovieDetails
 }

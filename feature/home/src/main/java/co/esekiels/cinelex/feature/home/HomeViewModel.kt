@@ -13,12 +13,16 @@ import co.esekiels.cinelex.core.data.movie.MovieRepository
 import co.esekiels.cinelex.core.data.user.UserDataRepository
 import co.esekiels.cinelex.core.model.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,63 +35,54 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val uiState: StateFlow<HomeUiState> get() = _uiState.asStateFlow()
 
-    private val _nowPlayingState = MutableStateFlow<List<Movie>>(emptyList())
-    val nowPlayingState: StateFlow<List<Movie>> get() = _nowPlayingState.asStateFlow()
+    val nowPlayingState: StateFlow<List<Movie>> = movieRepository.fetchNowPlaying()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _upcomingState = MutableStateFlow<List<Movie>>(emptyList())
-    val upcomingState: StateFlow<List<Movie>> get() = _upcomingState.asStateFlow()
+    val upcomingState: StateFlow<List<Movie>> = movieRepository.fetchUpcoming()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _topRatedState = MutableStateFlow<List<Movie>>(emptyList())
-    val topRatedState: StateFlow<List<Movie>> get() = _topRatedState.asStateFlow()
+    val topRatedState: StateFlow<List<Movie>> = movieRepository.fetchTopRated()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _popularState = MutableStateFlow<List<Movie>>(emptyList())
-    val popularState: StateFlow<List<Movie>> get() = _popularState.asStateFlow()
+    val popularState: StateFlow<List<Movie>> = movieRepository.fetchPopular()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
-        userDataRepository.observeLanguage()
-            .onEach { fetchAll() }
-            .launchIn(viewModelScope)
-    }
-
-    private fun fetchAll() {
-        _uiState.value = HomeUiState.Loading
-        _nowPlayingState.value = emptyList()
-        _upcomingState.value = emptyList()
-        _topRatedState.value = emptyList()
-        _popularState.value = emptyList()
-
         viewModelScope.launch {
-            val nowPlaying = async { fetchSafely { movieRepository.fetchNowPlaying() } }
-            val upcoming = async { fetchSafely { movieRepository.fetchUpcoming() } }
-            val topRated = async { fetchSafely { movieRepository.fetchTopRated() } }
-            val popular = async { fetchSafely { movieRepository.fetchPopular() } }
-
-            _nowPlayingState.value = nowPlaying.await()
-            _upcomingState.value = upcoming.await()
-            _topRatedState.value = topRated.await()
-            _popularState.value = popular.await()
-
-            val hasData = _nowPlayingState.value.isNotEmpty() ||
-                _upcomingState.value.isNotEmpty() ||
-                _topRatedState.value.isNotEmpty() ||
-                _popularState.value.isNotEmpty()
-
-            if (_uiState.value is HomeUiState.Error && hasData) return@launch
-            if (_uiState.value !is HomeUiState.Error) _uiState.value = HomeUiState.Idle
+            val cached = movieRepository.fetchNowPlaying().first()
+            if (cached.isEmpty()) {
+                refreshAll()
+            } else {
+                _uiState.value = HomeUiState.Idle
+            }
         }
+
+        userDataRepository.observeLanguage()
+            .drop(1)
+            .onEach { refreshAll() }
+            .launchIn(viewModelScope)
+
+        combine(nowPlayingState, upcomingState, topRatedState, popularState) { np, up, tr, pop ->
+            np.isNotEmpty() || up.isNotEmpty() || tr.isNotEmpty() || pop.isNotEmpty()
+        }.onEach { hasData ->
+            if (hasData && _uiState.value is HomeUiState.Loading) {
+                _uiState.value = HomeUiState.Idle
+            }
+        }.launchIn(viewModelScope)
     }
 
-    private suspend fun fetchSafely(fetch: suspend () -> List<Movie>): List<Movie> {
-        return try {
-            fetch()
+    private suspend fun refreshAll() {
+        _uiState.value = HomeUiState.Loading
+        try {
+            movieRepository.refreshMovies()
+            _uiState.value = HomeUiState.Idle
         } catch (e: Exception) {
             _uiState.value = HomeUiState.Error(e.message)
-            emptyList()
         }
     }
 
     fun refresh() {
-        fetchAll()
+        viewModelScope.launch { refreshAll() }
     }
 
     fun dismissError() {

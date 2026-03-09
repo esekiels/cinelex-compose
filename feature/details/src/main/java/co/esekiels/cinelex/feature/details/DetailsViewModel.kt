@@ -34,10 +34,6 @@ class DetailsViewModel @Inject constructor(
     fun loadDetails(id: Int) {
         if (movieId == id) return
         movieId = id
-        fetchDetails()
-    }
-
-    private fun fetchDetails() {
         _uiState.value = DetailsUiState.Loading
         viewModelScope.launch {
             try {

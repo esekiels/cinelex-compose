@@ -8,7 +8,9 @@
 package co.esekiels.cinelex.core.data.genre
 
 import co.esekiels.cinelex.core.model.Genre
+import kotlinx.coroutines.flow.Flow
 
 interface GenreRepository {
-	suspend fun fetchGenres(): List<Genre>
+	fun fetchGenres(): Flow<List<Genre>>
+	suspend fun refreshGenres()
 }
