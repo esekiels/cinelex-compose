@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package co.esekiels.cinelex.core.datastore;
+
+option java_package = "co.esekiels.cinelex.core.datastore";
+
+message UserPreferencesProto {
+  string language = 1;
+  string ui_theme = 2;
+}

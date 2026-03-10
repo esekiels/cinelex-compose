@@ -1,0 +1,15 @@
+default_platform(:android)
+
+platform :android do
+
+  desc "Run detekt and all unit tests"
+  lane :check do
+    gradle(task: "detekt test")
+  end
+
+  desc "Build release APK"
+  lane :release do
+    gradle(task: "assembleRelease")
+  end
+
+end

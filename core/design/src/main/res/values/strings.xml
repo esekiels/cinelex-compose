@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cinelex</string>
+
+    <!-- Actions -->
+    <string name="action_language">Change language</string>
+    <string name="action_theme">Toggle theme</string>
+
+    <!-- Language picker -->
+    <string name="picker_language_title">Select Language</string>
+    <string name="language_english">English</string>
+    <string name="language_indonesian">Indonesian</string>
+
+    <!-- Bottom Navigation -->
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+
+    <!-- Home -->
+    <string name="now_playing">Now Playing</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="popular">Popular</string>
+
+    <!-- Details -->
+    <string name="cast">Cast</string>
+    <string name="crew">Crew</string>
+    <string name="director">Director</string>
+    <string name="producer">Producer</string>
+    <string name="writer">Writer</string>
+    <string name="trailers">Trailers</string>
+
+    <!-- Search -->
+    <string name="search_prompt">Search movies…</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="no_results">No results for \"%s\"</string>
+
+    <!-- Theme picker -->
+    <string name="picker_theme_title">Select Theme</string>
+    <string name="theme_follow_system">Follow System</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+</resources>
